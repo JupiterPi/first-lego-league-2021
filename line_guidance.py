@@ -40,25 +40,29 @@ class LineGuidance:
     def drive(self):
         print("drive")
         self.instructions.append(("drive",))
-    
+
     def drive_and_take_crossing(self, crossing_target):
         print("drive and take crossing " + str(crossing_target))
         self.instructions.append(("drive_and_take_crossing", str(crossing_target)))
-    
+
+    def switch_to_lane(self, new_lane): # new_lane = 'A' or 'B'
+        print("switching to lane " + new_lane)
+        self.instructions.append(("switch_to_lane", new_lane))
+
     def run(self):
         self.crossings_left = -1
         for instruction in self.instructions:
             self.execute_instruction(instruction)
-    
+
     light_pr = light_b
     light_sc = light_a
     invert_steering = True
-    
+
     crossings_left = -1
-    is_crossing = False
+    lastly_crossing = False
 
     sc_on_track_start = -1
-    
+
     def execute_instruction(self, instruction):
         print("executing instruction: " + str(instruction))
 
@@ -74,28 +78,13 @@ class LineGuidance:
                 light_pr_percent = (self.light_pr.get_reflected_light() - self.min_light) / (self.max_light - self.min_light)
                 light_sc_percent = (self.light_sc.get_reflected_light() - self.min_light) / (self.max_light - self.min_light)
 
-                #rgb = self.light_sc.get_rgb_intensity()
-                #sc_on_track = (fabs(rgb[0] - rgb[1]) < rgb_margin) and (fabs(rgb[1] - rgb [2]) < rgb_margin) and (fabs(rgb[0] - rgb[2]) < rgb_margin)
-                #sc_on_track = sc_on_track and ( light_sc_percent > 0.9 or light_sc_percent < 0.1 )
-                #if sc_on_track: 
-                #    if sc_on_track_start == -1:
-                #        sc_on_track_start = time.time
-                #    else:
-                #        sc_on_track = sc_on_track and time.time - sc_on_track_start > 0.3
-                #else:
-                #    sc_on_track_start = -1
-                #print(str(fabs(rgb[0] - rgb[1])) + " " + str(fabs(rgb[1] - rgb[2])) + " " + str(fabs(rgb[0] - rgb[2])))
-                #if sc_on_track:
-                #    hub.status_light.on("green")
-                #else:
-                #    hub.status_light.on("blue")
-                is_crossing = self.light_sc.get_color() == "black"
-                if is_crossing:
+                currently_crossing = self.light_sc.get_color() == "black"
+                if currently_crossing:
                     hub.status_light.on("green")
                 else:
                     hub.status_light.on("blue")
-                if self.is_crossing != is_crossing:
-                    if is_crossing:
+                if self.lastly_crossing != currently_crossing:
+                    if currently_crossing:
                         motors.stop()
                         hub.speaker.start_beep(60)
                         self.crossings_left = self.crossings_left - 1
@@ -117,11 +106,12 @@ class LineGuidance:
                     else:
                         hub.speaker.stop()
 
-                    self.is_crossing = is_crossing
+                    self.lastly_crossing = currently_crossing
 
                 steering = (light_pr_percent - 0.5) * 100
                 dynamic_speed = speed - ( abs(steering)/100 * (speed - maneuvering_speed) )
-                if self.invert_steering: steering = -steering
+                if self.invert_steering:
+                    steering = -steering
                 motors.start_at_power(int(dynamic_speed), int(steering))
 
         # ----- drive and take crossing -----
@@ -129,6 +119,37 @@ class LineGuidance:
             self.crossings_left = int(instruction[1])
             print("driving and taking crossing " + str(self.crossings_left) + "...")
             self.execute_instruction(("drive",))
+
+        # ----- switch to lane -----
+        if instruction_name == "switch_to_lane" and length == 2:
+            new_lane = instruction[1]
+            old_light_pr = self.light_pr
+            old_light_sc = self.light_sc
+            self.light_pr = light_a
+            self.light_sc = light_b
+            if new_lane == "B":
+                self.light_pr = light_b
+                self.light_sc = light_a
+
+            start_time = time.time()
+            while True:
+                if new_lane == "A":
+                    motors.start_tank_at_power(maneuvering_speed, maneuvering_speed * 0.05)
+                else:
+                    motors.start_tank_at_power(maneuvering_speed * 0.05, maneuvering_speed)
+                if self.light_pr.get_color() == "black":
+                    break
+            duration = time.time() - start_time()
+            new_time = duration * 0.8
+            start_time = time.time()
+            while True:
+                if new_lane == "A":
+                    motors.start_tank_at_power(maneuvering_speed, maneuvering_speed * 0.05)
+                else:
+                    motors.start_tank_at_power(maneuvering_speed * 0.05, maneuvering_speed)
+                if time.time() - start_time >= new_time:
+                    break
+            print("realigned")
 
 guidance = LineGuidance()
 guidance.initialize()
@@ -143,4 +164,7 @@ motors.move(10)
 
 #guidance.drive()
 guidance.drive_and_take_crossing(1)
+guidance.switch_to_lane("B")
+#guidance.drive()
+
 guidance.run()
