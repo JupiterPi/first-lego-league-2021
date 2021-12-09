@@ -1,0 +1,24 @@
+from spike import PrimeHub, LightMatrix, Button, StatusLight, ForceSensor, MotionSensor, Speaker, ColorSensor, App, DistanceSensor, Motor, MotorPair
+from spike.control import wait_for_seconds, wait_until, Timer
+from math import *
+import time
+
+# establish port connections
+hub = PrimeHub()
+motors = MotorPair('C', 'D')
+grab_arm = Motor('E')
+light_a = ColorSensor('A')
+light_b = ColorSensor('B')
+
+class GrabArm:
+    def initialize(self):
+        grab_arm.run_to_position(0)
+        print('test')
+        
+    def move(self, position):
+        grab_arm.run_to_position(position)
+
+
+GrabArm.initialize(GrabArm)
+hub.right_button.wait_until_pressed()
+GrabArm.move(GrabArm, 100)
