@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>FLL Compilation Tool</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+<div id="header">
+<h1>FLL Compilation Tool</h1>
+<p id="subtitle">
+    <span class="muted">made by:</span>
+    <a class="none" href="https://github.com/JupiterPi" target="_blank">JupiterPi</a> / Jonathan
+    <span class="muted">for</span>
+    <a class="none" href="https://github.com/JupiterPi/first-lego-league-2021" target="_blank">FLL Team F</a>
+    <br>
+    <span class="muted">Only to be used by Team F unless otherwise noted. All rights reserved.</span>
+</p>
+</div>
+
+<div class="frame-container" id="frame-container">
+    <label class="label" for="frame">Frame</label>
+    <br>
+    <textarea id="frame" rows="15"></textarea>
+</div>
+
+<div id="scripts"></div>
+
+<br><br><button onclick="addScript()">Add Script</button>
+<button onclick="compile()">Compile</button>
+<button onclick="readFromClipboard()">Read from Clipboard</button>
+<button onclick="saveToClipboard()">Save to Clipboard</button>
+<button onclick="toggleNotes()">?</button>
+
+<div id="notes-container" style="display: none">
+    This tool compiles a frame and multiple normal LEGO Spike Prime Python scripts into a single script that can then be executed in the App.
+    <br><br>
+    To do this, first paste the frame script (e. g. <code>line_guidance.py</code> into the "Frame" text area.
+    Then copy every other script to the other text areas (for this, you might need to add more scripts using the "Add Script" button) and name them accordingly by settings your cursor where it says <code>script_76d1e68...</code> or similar.
+    You can remove a script by clicking the "x" button next to the bottom right corner.
+    <br><br>
+    But before you do that, you have to set markers in the source files.
+    The frame script has to contain a line saying <code>#$content$</code>. This is where the other scripts will be inserted.
+    All other scripts need to have a line saying <code>#$start$</code> after all <code>import</code> statements.
+    <br><br>
+    When you're done with that, click the button that says "Compile". You can then copy the contents of the bottom text area (that just appeared) and paste them into a new Python project inside the LEGO Spike Prime app. That will be your final code.
+    <br><br>
+    If you want to save the current setup of frame scripts and normal scripts, click the "Save to Clipborad" button. You can then paste some code from your clipboard to, for example, a file that you can save on your disc.
+    To load the setup back into the Compilation Tool, copy the code from your file and click "Read from Clipboard". This will replace the current project with the saved one from the clipboard.
+    <br><br>
+    If you have any more questions, ask JupiterPi/Jonathan. Click "?" again to hide this window.
+</div>
+
+<div id="result-container" style="display: none">
+    <hr>
+    <h2>Compiled Result</h2>
+    <textarea id="result" style="height: 300px"></textarea>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

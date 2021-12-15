@@ -1,0 +1,102 @@
+body {
+    font-family: sans-serif;
+    color: #2f2f2f;
+
+    margin: 50px 70px;
+}
+
+h1 {
+    margin-bottom: 0;
+}
+#subtitle {
+    margin-top: 5px;
+}
+#header {
+    margin-bottom: 50px;
+}
+
+.muted {
+    color: #9f9f9f;
+}
+
+a.none, a.none:hover, a.none:visited, a.none:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+div.container {
+    margin-top: 30px;
+}
+
+div.container input {
+    border: none;
+    font-size: 100%;
+    width: 60%;
+    text-decoration: white underline;
+    transition: text-decoration-color 100ms;
+}
+
+div.container input:hover {
+    text-decoration-color: grey;
+}
+
+textarea {
+    height: 100px;
+    width: 90%;
+    border: solid black 1.5px;
+    box-shadow: 5px 10px 15px #dadada;
+    resize: vertical;
+}
+
+button {
+    border: solid darkgrey 1px;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    padding: 5px 8px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+button:hover {
+    background-color: #f8f8f8;
+}
+
+button {
+    transition: background-color 50ms;
+}
+
+button.remove {
+    position: relative;
+    bottom: 15px;
+    left: 7px;
+
+    border-color: #ff1616;
+    background-color: #ffdede;
+    padding: 4px 10px;
+}
+
+button.remove:hover {
+    background-color: #fff6f6;
+    cursor: pointer;
+}
+
+button.remove.inactive {
+    opacity: 30%;
+    cursor: not-allowed;
+}
+
+hr {
+    border: none;
+    border-top: solid darkgrey 1.5px;
+    margin: 30px 10px;
+}
+
+#notes-container {
+    margin: 30px 0 40px 0;
+    border: solid darkgrey 1px;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    padding: 10px 20px 10px 12px;
+    width: fit-content;
+    box-shadow: 5px 10px 15px #eeeeee;
+}
