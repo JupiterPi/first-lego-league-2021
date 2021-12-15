@@ -45,9 +45,21 @@ class LineGuidance:
         print("drive and take crossing " + str(crossing_target))
         self.instructions.append(("drive_and_take_crossing", str(crossing_target)))
 
+    def drive_to_crossing(self, crossing_target):
+        print("drive to crossing " + str(crossing_target))
+        self.instructions.append(("drive_to_crossing", str(crossing_target)))
+
     def switch_to_lane(self, new_lane): # new_lane = 'A' or 'B'
         print("switching to lane " + new_lane)
         self.instructions.append(("switch_to_lane", new_lane))
+    
+    def manually_switch_to_lane(self, new_lane): # new_lane = 'A' or 'B'
+        print("manually switching to lane " + new_lane)
+        self.instructions.append(("manually_switch_to_lane", new_lane))
+
+    def drive_for(self, seconds):
+        print("driving for (s) " + str(seconds))
+        self.instructions.append(("drive_for", seconds))
 
     def run(self):
         self.crossings_left = -1
@@ -60,6 +72,10 @@ class LineGuidance:
 
     crossings_left = -1
     lastly_crossing = False
+    crossing_do_turn = False
+
+    start_time = -1
+    time_target = -1
 
     sc_on_track_start = -1
 
@@ -90,19 +106,24 @@ class LineGuidance:
                         self.crossings_left = self.crossings_left - 1
                         if self.crossings_left == 0:
 
-                            hub.speaker.beep(80, 1)
+                            if self.crossing_do_turn:
+                                former_light_pr = self.light_pr
+                                former_light_sc = self.light_sc
+                                self.light_pr = former_light_sc
+                                self.light_sc = former_light_pr
+                                self.invert_steering = not self.invert_steering
+                                while True:
+                                    motors.start_tank_at_power(int(high_maneuvering_speed/2), int(high_maneuvering_speed*2))
+                                    former_light_sc_percent = (former_light_sc.get_reflected_light() - self.min_light) / (self.max_light - self.min_light)
+                                    if former_light_sc_percent > 0.8:
+                                        break
+                            
+                            crossings_left = -1
+                            lastly_crossing = False
+                            crossing_do_turn = False
+                            hub.speaker.stop()
+                            break
 
-                            former_light_pr = self.light_pr
-                            former_light_sc = self.light_sc
-                            self.light_pr = former_light_sc
-                            self.light_sc = former_light_pr
-                            self.invert_steering = not self.invert_steering
-
-                            while True:
-                                motors.start_tank_at_power(int(high_maneuvering_speed/2), int(high_maneuvering_speed*2))
-                                former_light_sc_percent = (former_light_sc.get_reflected_light() - self.min_light) / (self.max_light - self.min_light)
-                                if former_light_sc_percent > 0.8:
-                                    break
                     else:
                         hub.speaker.stop()
 
@@ -114,10 +135,33 @@ class LineGuidance:
                     steering = -steering
                 motors.start_at_power(int(dynamic_speed), int(steering))
 
+                if self.time_target != -1:
+                    if self.start_time == -1:
+                        self.start_time = time.time()
+                    if time.time() >= (self.start_time + self.time_target):
+                        self.time_target = -1
+                        self.start_time = -1
+                        motors.stop()
+                        break
+
+
         # ----- drive and take crossing -----
         if instruction_name == "drive_and_take_crossing" and length == 2:
             self.crossings_left = int(instruction[1])
+            self.crossing_do_turn = True
             print("driving and taking crossing " + str(self.crossings_left) + "...")
+            self.execute_instruction(("drive",))
+
+        # ----- drive to crossing -----
+        if instruction_name == "drive_to_crossing" and length == 2:
+            self.crossings_left = int(instruction[1])
+            self.crossing_do_turn = False
+            print("driving to crossing " + str(self.crossings_left) + "...")
+            self.execute_instruction(("drive",))
+
+        # ----- drive for -----
+        if instruction_name == "drive_for" and length == 2:
+            self.time_target = int(instruction[1])
             self.execute_instruction(("drive",))
 
         # ----- switch to lane -----
@@ -125,31 +169,70 @@ class LineGuidance:
             new_lane = instruction[1]
             old_light_pr = self.light_pr
             old_light_sc = self.light_sc
+            print("is A")
             self.light_pr = light_a
             self.light_sc = light_b
+            self.invert_steering = False
             if new_lane == "B":
+                print("is B")
                 self.light_pr = light_b
                 self.light_sc = light_a
+                self.invert_steering = True
 
             start_time = time.time()
+            print("start time: " + str(start_time))
             while True:
                 if new_lane == "A":
-                    motors.start_tank_at_power(maneuvering_speed, maneuvering_speed * 0.05)
+                    print("A...")
+                    motors.start_tank_at_power(maneuvering_speed, int(maneuvering_speed * 0.05))
                 else:
-                    motors.start_tank_at_power(maneuvering_speed * 0.05, maneuvering_speed)
+                    print("B...")
+                    motors.start_tank_at_power(int(maneuvering_speed * 0.05), maneuvering_speed)
                 if self.light_pr.get_color() == "black":
+                    print("saw black")
+                    motors.stop()
                     break
-            duration = time.time() - start_time()
+            print("current time: " + str(time.time()))
+            print("start time: " + str(start_time))
+            duration = time.time() - start_time
+            duration = 1    #######################
+            print("duration: " + str(duration))
             new_time = duration * 0.8
+            print("new time: " + str(new_time))
             start_time = time.time()
-            while True:
-                if new_lane == "A":
-                    motors.start_tank_at_power(maneuvering_speed, maneuvering_speed * 0.05)
-                else:
-                    motors.start_tank_at_power(maneuvering_speed * 0.05, maneuvering_speed)
-                if time.time() - start_time >= new_time:
-                    break
+            print("start time: " + str(start_time))
+            if new_lane == "B":
+                print("B...")
+                motors.move_tank(new_time, unit="seconds", left_speed=maneuvering_speed, right_speed=int(maneuvering_speed * 0.05))
+            else:
+                print("A...")
+                motors.move_tank(new_time, unit="seconds", left_speed=int(maneuvering_speed * 0.05), right_speed=maneuvering_speed)
+            #while True:
+            #    if new_lane == "B":
+            #        print("B...")
+            #        motors.start_tank_at_power(maneuvering_speed, int(maneuvering_speed * 0.05))
+            #    else:
+            #        print("A...")
+            #        motors.start_tank_at_power(int(maneuvering_speed * 0.05), maneuvering_speed)
+            #    if time.time() - start_time >= new_time:
+            #        print("time over")
+            #        motors.stop()
+            #        break
             print("realigned")
+
+        # ----- manually switch to lane -----
+        if instruction_name == "manually_switch_to_lane" and length == 2:
+            new_lane = instruction[1]
+            print("manually switching to lane: " + new_lane)
+            print("is A")
+            self.light_pr = light_a
+            self.light_sc = light_b
+            self.invert_steering = False
+            if new_lane == "B":
+                print("is B")
+                self.light_pr = light_b
+                self.light_sc = light_a
+                self.invert_steering = True
 
 guidance = LineGuidance()
 guidance.initialize()
@@ -162,9 +245,17 @@ motors.move(10)
 
 # programming space
 
-#guidance.drive()
-guidance.drive_and_take_crossing(1)
-guidance.switch_to_lane("B")
-#guidance.drive()
+guidance.drive_to_crossing(4)
+guidance.run()
 
+motors.move_tank(1, "seconds", left_speed=50, right_speed=50)
+motors.move_tank(1, "seconds", left_speed=-30, right_speed=-30)
+motors.move_tank(1, "seconds", left_speed=50, right_speed=0)
+motors.move_tank(1, "seconds", left_speed=-10, right_speed=-10)
+
+guidance.manually_switch_to_lane("A")
+
+time.sleep(1)
+
+guidance.drive()
 guidance.run()
