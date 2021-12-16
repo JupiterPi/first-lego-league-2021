@@ -54,7 +54,7 @@ class LineGuidance:
     def switch_to_lane(self, new_lane): # new_lane = 'A' or 'B'
         print("switching to lane " + new_lane)
         self.instructions.append(("switch_to_lane", new_lane))
-    
+
     def manually_switch_to_lane(self, new_lane): # new_lane = 'A' or 'B'
         print("manually switching to lane " + new_lane)
         self.instructions.append(("manually_switch_to_lane", new_lane))
@@ -119,7 +119,7 @@ class LineGuidance:
                                     former_light_sc_percent = (former_light_sc.get_reflected_light() - self.min_light) / (self.max_light - self.min_light)
                                     if former_light_sc_percent > 0.8:
                                         break
-                            
+
                             crossings_left = -1
                             lastly_crossing = False
                             crossing_do_turn = False
@@ -241,14 +241,14 @@ class GrabArm:
     def initialize(self):
         grab_arm.run_to_position(0)
         print('test')
-        
+
     def move(self, position):
         grab_arm.run_to_position(position)
 
 
 GrabArm.initialize(GrabArm)
 hub.right_button.wait_until_pressed()
-GrabArm.move(GrabArm, 100)
+GrabArm.move(GrabArm, 90)
 
 guidance = LineGuidance()
 guidance.initialize()
@@ -263,7 +263,7 @@ motors.move(10)
 
 #guidance.drive()
 #guidance.drive_and_take_crossing(1)
-#guidance.switch_to_lane("B")
+guidance.manually_switch_to_lane("B")
 #guidance.drive()
 
 #guidance.run()
@@ -272,97 +272,120 @@ motors.move(10)
 
 hub.status_light.on('yellow')
 
-motors.move_tank(20, 'cm', left_speed=50, right_speed=50) # Geradeaus fahren # motor_pair.move(15, 'cm')
+guidance.drive_for(5)
+#motors.move_tank(20, 'cm', left_speed=50, right_speed=50) # Geradeaus fahren # motor_pair.move(15, 'cm')
 hub.status_light.on('red') # Dient zur Kontrolle
 motors.move_tank(0.5, 'rotations', left_speed=0, right_speed=50) # Linkskurve zur Kiste # ggf. mit Ultraschallsensor
 hub.status_light.on('blue') # Dient zur Kontrolle
-# Greifarm senken auf mittlere Höhe
+GrabArm.move(GrabArm,45)# Greifarm senken auf mittlere Höhe
 motors.move_tank(25, 'cm', left_speed=75, right_speed=75) # Geradeaus fahren
 hub.status_light.on('green') # Dient zur Kontrolle
+GrabArm.move(GrabArm,90)
+
+#warten:
+hub.left_button.wait_until_pressed()
+hub.status_light.off()
+guidance.manually_switch_to_lane("B")
+
 
 #A14:
 
-grab_arm.run_to_position(190)
+motors.move(10)
+guidance.drive_to_crossing(2)
+#grab_arm.run_to_position(190)
+GrabArm.move(GrabArm,30)
 # print("check")
-motors.move_tank(15, 'cm', 50, 50) # Linien-Folger
-greifarm.run_to_position(210)
-motors.move_tank(15, 'cm', 50, 50) # Linien-Folger
-greifarm.run_to_position(190)
-motors.move_tank(15, 'cm', -50, -50) # Linien-Folger
+#motors.move_tank(15, 'cm', 50, 50) 
+# Linien-Folger:
+guidance.drive_for(1) #<-geschätzt! nochmal prüfen!
+#greifarm.run_to_position(210)
+GrabArm.move(GrabArm,85)
+#motors.move_tank(15, 'cm', 50, 50) 
+# Linien-Folger:
+guidance.drive_for(1) #<-geschätzt! nochmal prüfen!
+#greifarm.run_to_position(190)
+GrabArm.move(GrabArm,30)
+motors.move_tank(15, 'cm', -50, -50)
 
 hub.status_light.off()
 
-#A08
+#A08:
 
+GrabArm.move(GrabArm,90)
 #an rechtem Sensor nach rechts um die Ecke fahren:
+guidance.drive_to_crossing(1)
+motors.move_tank(1, 'rotations', left_speed=maneuvaring_speed, right_speed=0)
 
-#A09
-
-#Greifarm nach oben:
-#grab_arm.run_for_rotations(0.25)
-
-#Sensor zu linkem Sensor wechseln:
-
-#Linie mit linkem Sensor folgen, bis rechter Sensor schwarz erkennt:
+#A09:
+guidance.switch_to_lane("A")
+guidance.drive_to_crossing(1)
 
 #Schienen schließen:
 motors.move_tank(10,'cm',left_speed=0,right_speed=75)
 motors.move_tank(4,'cm',left_speed=100,right_speed=100)
-grab_arm.run_for_rotations(-0.25)
+GrabArm.move(GrabArm,25)
 motors.move_tank(-4,'cm',left_speed=100,right_speed=100)
-grab_arm.run_for_rotations(0.25)
-motors.move_tank(10,'cm',left_speed=0,right_speed=-75)
+GrabArm.move(GrabArm,85)
+motors.move_tank(10,'cm',left_speed=-75,right_speed=75)
 
-#Linie rückwärts it linkem Sensor folgen, bis rechter Sensor schwarz erkennt:
+#Linie mit rechtem Sensor folgen, bis linker Sensor schwarz erkennt:
+guidance.manually_switch_to_lane("B")
+guidance.drive_to_crossing(1)
 
 #Bahn nach vorne schieben:
-#grab_arm.run_for_rotations(0.25)
-    #Linie vorwärts folgen, bis Sensor rechts schwarz erkennt:
+motors.move_tank(2,'rotations',left_speed=75,right_speed=-75)
+#Linie vorwärts folgen, bis Sensor rechts schwarz erkennt:
+guidance.manually_switch_to_lane("A")
+GrabArm.move(GrabArm,25)
+guidance.drive_to_crossing(1)
+guidance.drive_for(1)
+
 
 #zurückholen
 
+
+#A03:
+guidance.manually_switch_to_lane("A")
 hub.left_button.wait_until_pressed()
 motors.move(10)
 
-#A03:
 
-def geradeaus(nullpunkt):
+def forward():
     #greifarm hoch:
-    #grab_arm.run_to_position(nullpunkt)
+    GrabArm.move(GrabArm,90)
 
     #Linie mit linkem Sensor folgen, wenn Rechtskurve anfängt, Richtung beibehalten:
-
+    guidance.drive_for(2)
     #geradeaus zu Flugzeug fahren:
     motors.move_tank(1.3,'rotations',left_speed=75,right_speed=75)
 
     #Klappe schließen:
-    grab_arm.start(speed=-75)
+    GrabArm.move(GrabArm,20)
     motors.move_tank(-0.5,'rotations',left_speed=25,right_speed=25)
-    grab_arm.stop()
-    grab_arm.run_for_degrees(10,speed=50)
-    motors.move_tank(-0.8,'rotations',left_speed=75,right_speed=75)
+    GrabArm.move(GrabArm,50)
+    motors.move_tank(-5,'rotations',left_speed=75,right_speed=75)
 
-    
-def linie_nehmen(nullpunkt):
+
+#def take_line():
     #greifarm hoch:
-    grab_arm.run_to_position(nullpunkt)
+    #GrabArm.move(GrabArm,85)
 
     #Linie mit rechtem Sensor folgen, Linkskurve nehmen, warten bis Sensor weiß erkennt:
 
     #um 90° nach links drehen:
-    motors.move_tank(7,'cm',left_speed=0,right_speed=75)
+    #motors.move_tank(7,'cm',left_speed=0,right_speed=75)
 
     #greifarm runter:
-    grab_arm.run_to_position(nullpunkt - 50)
+    #grab_arm.run_to_position(nullpunkt - 50)
 
     #greifarm hoch:
-    grab_arm.run_to_position(nullpunkt)
+    #grab_arm.run_to_position(nullpunkt)
 
     #um 90° nach rechts drehen:
-    motors.move_tank(7,'cm',left_speed=0,right_speed=-75)
+    #motors.move_tank(7,'cm',left_speed=0,right_speed=-75)
 
-geradeaus(100)
+forward()
 
-A05:
+#A05:
 
-A06:
+#A06:
