@@ -28,6 +28,14 @@ div.container {
     margin-top: 30px;
 }
 
+div.label-container {
+    width: 90%;
+}
+
+span.label {
+    float: left;
+}
+
 div.container input {
     border: none;
     font-size: 100%;
@@ -50,7 +58,6 @@ textarea {
 
 button {
     border: solid darkgrey 1px;
-    cursor: pointer;
     background-color: #f1f1f1;
     padding: 5px 8px;
     border-radius: 5px;
@@ -59,28 +66,51 @@ button {
 
 button:hover {
     background-color: #f8f8f8;
+    cursor: pointer;
 }
 
 button {
     transition: background-color 50ms;
 }
 
-button.remove {
+button.right {
+    float: right;
+    position: relative;
+    bottom: 5px;
+}
+
+button.bottom-right {
     position: relative;
     bottom: 15px;
     left: 7px;
-
-    border-color: #ff1616;
-    background-color: #ffdede;
     padding: 4px 10px;
 }
 
+button.remove {
+    border-color: #ff1616;
+    background-color: #ffdede;
+}
 button.remove:hover {
     background-color: #fff6f6;
-    cursor: pointer;
 }
 
-button.remove.inactive {
+button.paste {
+    border-color: #1635ff;
+    background-color: #e0deff;
+}
+button.paste:hover {
+    background-color: #f6f6ff;
+}
+
+button.copy {
+    border-color: #8bff16;
+    background-color: #edffde;
+}
+button.copy:hover {
+    background-color: #f9fff6;
+}
+
+button.inactive {
     opacity: 30%;
     cursor: not-allowed;
 }

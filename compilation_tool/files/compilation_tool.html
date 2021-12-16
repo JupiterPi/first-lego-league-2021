@@ -22,9 +22,12 @@
 </div>
 
 <div class="frame-container" id="frame-container">
-    <label class="label" for="frame">Frame</label>
+    <div class="label-container">
+        <span class="label" for="frame">Frame</span>
+    </div>
     <br>
     <textarea id="frame" rows="15"></textarea>
+    <button class="paste bottom-right" onclick="pasteToFrame()">p</button>
 </div>
 
 <div id="scripts"></div>
@@ -56,7 +59,11 @@
 
 <div id="result-container" style="display: none">
     <hr>
-    <h2>Compiled Result</h2>
+    <!--<h2>Compiled Result</h2>-->
+    <div class="label-container">
+        <span class="label" for="result">Compiled Result</span>
+        <button class="copy right" onclick="copyFromResult()">c</button>
+    </div>
     <textarea id="result" style="height: 300px"></textarea>
 </div>
 

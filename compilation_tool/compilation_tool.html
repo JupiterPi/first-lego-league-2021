@@ -36,6 +36,14 @@
             margin-top: 30px;
         }
 
+        div.label-container {
+            width: 90%;
+        }
+
+        span.label {
+            float: left;
+        }
+
         div.container input {
             border: none;
             font-size: 100%;
@@ -58,7 +66,6 @@
 
         button {
             border: solid darkgrey 1px;
-            cursor: pointer;
             background-color: #f1f1f1;
             padding: 5px 8px;
             border-radius: 5px;
@@ -67,28 +74,51 @@
 
         button:hover {
             background-color: #f8f8f8;
+            cursor: pointer;
         }
 
         button {
             transition: background-color 50ms;
         }
 
-        button.remove {
+        button.right {
+            float: right;
+            position: relative;
+            bottom: 5px;
+        }
+
+        button.bottom-right {
             position: relative;
             bottom: 15px;
             left: 7px;
-
-            border-color: #ff1616;
-            background-color: #ffdede;
             padding: 4px 10px;
         }
 
+        button.remove {
+            border-color: #ff1616;
+            background-color: #ffdede;
+        }
         button.remove:hover {
             background-color: #fff6f6;
-            cursor: pointer;
         }
 
-        button.remove.inactive {
+        button.paste {
+            border-color: #1635ff;
+            background-color: #e0deff;
+        }
+        button.paste:hover {
+            background-color: #f6f6ff;
+        }
+
+        button.copy {
+            border-color: #8bff16;
+            background-color: #edffde;
+        }
+        button.copy:hover {
+            background-color: #f9fff6;
+        }
+
+        button.inactive {
             opacity: 30%;
             cursor: not-allowed;
         }
@@ -126,9 +156,12 @@
 </div>
 
 <div class="frame-container" id="frame-container">
-    <label class="label" for="frame">Frame</label>
+    <div class="label-container">
+        <span class="label" for="frame">Frame</span>
+    </div>
     <br>
     <textarea id="frame" rows="15"></textarea>
+    <button class="paste bottom-right" onclick="pasteToFrame()">p</button>
 </div>
 
 <div id="scripts"></div>
@@ -160,7 +193,11 @@
 
 <div id="result-container" style="display: none">
     <hr>
-    <h2>Compiled Result</h2>
+    <!--<h2>Compiled Result</h2>-->
+    <div class="label-container">
+        <span class="label" for="result">Compiled Result</span>
+        <button class="copy right" onclick="copyFromResult()">c</button>
+    </div>
     <textarea id="result" style="height: 300px"></textarea>
 </div>
 
@@ -170,33 +207,63 @@
 
     // ---------- gui ----------
 
+    function pasteToFrame() {
+        let frame = document.getElementById("frame");
+        navigator.clipboard.readText().then(function (text) {
+            frame.value = text;
+        });
+    }
+
+    function copyFromResult() {
+        let result = document.getElementById("result");
+        navigator.clipboard.writeText(result.value);
+    }
+
     function addScript() {
         let id = generateScriptId();
 
         let container = document.createElement("div");
-        container.classList.add("container");
         container.id = "script-container-" + id;
+        container.classList.add("container");
+
+        let labelContainer = document.createElement("div");
+        labelContainer.id = "label-container-" + id;
+        labelContainer.classList.add("label-container");
 
         let label = document.createElement("input");
         label.id = "label-" + id;
         label.classList.add("label");
         label.value = "script_" + id;
 
-        let textarea = document.createElement("textarea");
-        textarea.id = "script-" + id;
-
         let removeButton = document.createElement("button");
+        removeButton.id = "remove-button-" + id;
         removeButton.classList.add("remove");
-        //removeButton.title = "remove this script";
+        removeButton.classList.add("right");
         removeButton.innerText = "x";
         removeButton.onclick = function () {
             removeScript(container);
         }
 
-        container.appendChild(label);
-        container.appendChild(document.createElement("br"));
+        labelContainer.appendChild(label);
+        labelContainer.appendChild(removeButton);
+
+        let textarea = document.createElement("textarea");
+        textarea.id = "script-" + id;
+
+        let pasteButton = document.createElement("button");
+        pasteButton.id = "paste-button-" + id;
+        pasteButton.classList.add("paste");
+        pasteButton.classList.add("bottom-right");
+        pasteButton.innerText = "p";
+        pasteButton.onclick = function () {
+            navigator.clipboard.readText().then(function (text) {
+                textarea.value = text;
+            });
+        }
+
+        container.appendChild(labelContainer);
         container.appendChild(textarea);
-        container.appendChild(removeButton);
+        container.appendChild(pasteButton);
 
         scriptsContainer.appendChild(container);
 

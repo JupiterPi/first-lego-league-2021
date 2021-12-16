@@ -3,33 +3,63 @@ scriptsContainer = document.getElementById("scripts");
 
 // ---------- gui ----------
 
+function pasteToFrame() {
+    let frame = document.getElementById("frame");
+    navigator.clipboard.readText().then(function (text) {
+        frame.value = text;
+    });
+}
+
+function copyFromResult() {
+    let result = document.getElementById("result");
+    navigator.clipboard.writeText(result.value);
+}
+
 function addScript() {
     let id = generateScriptId();
 
     let container = document.createElement("div");
-    container.classList.add("container");
     container.id = "script-container-" + id;
+    container.classList.add("container");
+
+    let labelContainer = document.createElement("div");
+    labelContainer.id = "label-container-" + id;
+    labelContainer.classList.add("label-container");
 
     let label = document.createElement("input");
     label.id = "label-" + id;
     label.classList.add("label");
     label.value = "script_" + id;
 
-    let textarea = document.createElement("textarea");
-    textarea.id = "script-" + id;
-
     let removeButton = document.createElement("button");
+    removeButton.id = "remove-button-" + id;
     removeButton.classList.add("remove");
-    //removeButton.title = "remove this script";
+    removeButton.classList.add("right");
     removeButton.innerText = "x";
     removeButton.onclick = function () {
         removeScript(container);
     }
 
-    container.appendChild(label);
-    container.appendChild(document.createElement("br"));
+    labelContainer.appendChild(label);
+    labelContainer.appendChild(removeButton);
+
+    let textarea = document.createElement("textarea");
+    textarea.id = "script-" + id;
+
+    let pasteButton = document.createElement("button");
+    pasteButton.id = "paste-button-" + id;
+    pasteButton.classList.add("paste");
+    pasteButton.classList.add("bottom-right");
+    pasteButton.innerText = "p";
+    pasteButton.onclick = function () {
+        navigator.clipboard.readText().then(function (text) {
+            textarea.value = text;
+        });
+    }
+
+    container.appendChild(labelContainer);
     container.appendChild(textarea);
-    container.appendChild(removeButton);
+    container.appendChild(pasteButton);
 
     scriptsContainer.appendChild(container);
 
