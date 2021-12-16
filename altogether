@@ -387,14 +387,14 @@ def forward():
 forward()
 
 #A05:
-greifarm.run_to_position(110)
+grab_arm.run_to_position(110)
 
-motor_pair.move_tank(19, 'cm', 50, 50)
-motor_pair.move_tank(5, 'cm', 0, 50)
-motor_pair.move_tank(-5.5, 'cm', 50, 50)
+motors.move_tank(19, 'cm', 50, 50)
+motors.move_tank(5, 'cm', 0, 50)
+motors.move_tank(-5.5, 'cm', 50, 50)
 
-greifarm.run_to_position(10)
-motor_pair.move_tank(5.5, 'cm', -50, -50)
-greifarm.run_to_position(110)
-motor_pair.move_tank(3, 'cm', -50, -50)
+grab_arm.run_to_position(10)
+motors.move_tank(5.5, 'cm', -50, -50)
+grab_arm.run_to_position(110)
+motors.move_tank(3, 'cm', -50, -50)
 #A06:
