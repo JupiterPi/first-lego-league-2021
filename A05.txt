@@ -1,0 +1,19 @@
+from spike import PrimeHub, LightMatrix, Button, StatusLight, ForceSensor, MotionSensor, Speaker, ColorSensor, App, DistanceSensor, Motor, MotorPair
+from spike.control import wait_for_seconds, wait_until, Timer
+from math import *
+
+hub = PrimeHub()
+motor_pair = MotorPair('C','D') # Initalisierung der Motoren
+distance = DistanceSensor('F') # Initalisierung der Motoren
+greifarm = Motor('E') # Initalisierung der Motoren
+
+greifarm.run_to_position(110)
+
+motor_pair.move_tank(19, 'cm', 50, 50)
+motor_pair.move_tank(5, 'cm', 0, 50)
+motor_pair.move_tank(-5.5, 'cm', 50, 50)
+
+greifarm.run_to_position(10)
+motor_pair.move_tank(5.5, 'cm', -50, -50)
+greifarm.run_to_position(110)
+motor_pair.move_tank(3, 'cm', -50, -50)
