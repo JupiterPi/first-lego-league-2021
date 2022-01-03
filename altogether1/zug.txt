@@ -1,0 +1,51 @@
+from spike import PrimeHub, LightMatrix, Button, StatusLight, ForceSensor, MotionSensor, Speaker, ColorSensor, App, DistanceSensor, Motor, MotorPair
+from spike.control import wait_for_seconds, wait_until, Timer
+from math import *
+
+hub = PrimeHub()
+
+arm = Motor('E')
+motors = MotorPair('C','D')
+
+#$start$
+
+
+class GrabArm:
+    def initialize(self):
+        arm.run_for_degrees(-100)
+        arm.run_to_position(10)
+        print('test')
+
+    def move(self, position):
+        arm.run_to_position(position)
+
+
+GrabArm.initialize(GrabArm)
+hub.right_button.wait_until_pressed()
+GrabArm.move(GrabArm, 80)
+
+# Greifarm nach oben:
+# greifarm.run_for_rotations(0.25)
+
+# Linie mit linkem Sensor folgen, bis rechter Sensor schwarz erkennt:
+
+# Schienen schließen:
+motors.move_tank(3, 'cm', -20, -20)
+GrabArm.move(GrabArm, 110)
+motors.move_tank(5, 'cm', 50, 50)
+motors.move_tank(8,'cm',left_speed=0,right_speed=75)
+motors.move_tank(4,'cm',left_speed=50,right_speed=50)
+GrabArm.move(GrabArm, 30)
+motors.move_tank(-4,'cm',left_speed=50,right_speed=50)
+GrabArm.move(GrabArm, 110)
+motors.move_tank(11,'cm',left_speed=0,right_speed=-75)
+motors.move_tank(5.5, 'cm', -50, -25)
+GrabArm.move(GrabArm, 110)
+
+# Linie rückwärts it linkem Sensor folgen, bis rechter Sensor schwarz erkennt:
+
+# Bahn nach vorne schieben:
+# greifarm.run_for_rotations(0.25)
+    # Linie vorwärts folgen, bis Sensor rechts schwarz erkennt:
+
+# zurückholen

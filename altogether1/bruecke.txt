@@ -1,0 +1,27 @@
+#$start$
+
+# arm motor is: arm
+arm_down = 10
+arm_mid = 90
+arm_up = 110
+
+arm.run_to_position(arm_mid)
+
+guidance.drive_to_crossing(2)
+guidance.run()
+
+arm.run_to_position(arm_up)
+
+motors.move_tank(1, "seconds", left_speed=30, right_speed=30)
+guidance.drive_to_crossing(1)
+guidance.run()
+
+arm.run_to_position(arm_mid)
+
+brucke_speed = 30
+motors.move_tank(1, "seconds", left_speed=-brucke_speed , right_speed=-brucke_speed)
+#motors.move_tank(1, "seconds", left_speed=brucke_speed , right_speed=brucke_speed)
+
+arm.run_to_position(arm_up)
+
+print("bruecke done")
