@@ -296,5 +296,4 @@ motors.move(15)
 
 #$content$
 
-guidance.drive()
-guidance.run()
+print("done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
