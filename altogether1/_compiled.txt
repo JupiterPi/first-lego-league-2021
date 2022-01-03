@@ -267,16 +267,23 @@ class ArmControl:
     def down(self):
         arm_motor.run_to_position(self.arm_down)
         print("down")
-    
+
     def mid(self):
         arm_motor.run_to_position(self.arm_mid)
         print("mid")
-    
+
     def up(self):
         arm_motor.run_to_position(self.arm_up)
         print("up")
 
+    def calibrate(self):
+        hub.right_button.wait_until_pressed()
+        grab_arm.run_to_position(0)
+        print('calibrating gram arm')
+
 arm = ArmControl()
+
+arm.calibrate(arm)
 
 # wait for start
 hub.right_button.wait_until_pressed()
