@@ -1,0 +1,35 @@
+#$start$
+
+hub.left_button.wait_until_pressed()
+hub.speaker.beep(80, 0.7)
+
+arm.up()
+
+motors.move_tank(20, 'cm', left_speed=int(speed), right_speed=int(speed))
+
+guidance.drive_to_crossing(1) #drive to the first crossing
+guidance.run()
+
+motors.move_tank(10, 'cm', left_speed=(int(high_maneuvering_speed) + 15), right_speed=int(high_maneuvering_speed)) #adjusting position
+arm.up()
+motors.move_tank(30, 'cm', left_speed=-40, right_speed=-40) #driving to right position
+motors.move_tank(0.1, 'rotations', left_speed=-20, right_speed=20) #adjusting position
+motors.move_tank(-3, 'cm', left_speed=(int(high_maneuvering_speed) + 15), right_speed=int(high_maneuvering_speed)) #adjusting position
+arm.mid() #putting arm to mid position
+motors.move_tank(-1, 'cm', left_speed=(int(high_maneuvering_speed) + 15), right_speed=int(high_maneuvering_speed))
+arm_motor.run_for_degrees(-35)
+motors.move_tank(-1, 'cm', left_speed=(int(high_maneuvering_speed) + 15), right_speed=int(high_maneuvering_speed))
+arm_motor.run_for_degrees(-35)
+arm_motor.run_for_degrees(-35)
+arm.mid()
+arm_motor.run_for_degrees(50)
+motors.move_tank(-5, 'cm', left_speed=int(maneuvering_speed), right_speed=int(maneuvering_speed))
+motors.move_tank(0.08, 'rotations', left_speed=25, right_speed=0)
+motors.move_tank(15, 'cm', left_speed=int(maneuvering_speed), right_speed=int(maneuvering_speed))
+arm.down()
+motors.move_tank(0.05, 'rotations', left_speed=-20, right_speed=20)
+motors.move_tank(-10, 'cm', left_speed=40, right_speed=30)
+motors.move_tank(0.04, 'rotations', left_speed=int(maneuvering_speed), right_speed=int(-maneuvering_speed))
+arm.up()
+motors.move_tank(-10, 'cm', left_speed=int(maneuvering_speed), right_speed=int(maneuvering_speed))
+motors.move_tank(-20, 'cm', left_speed=50, right_speed=50)

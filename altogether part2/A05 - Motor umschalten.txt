@@ -1,0 +1,26 @@
+#$start$
+
+arm.up()
+
+motors.move_tank(20, 'cm', left_speed=int(speed), right_speed=int(speed))
+
+guidance.drive_to_crossing(1)
+guidance.run()
+motors.move_tank(13, 'cm', left_speed=int(high_maneuvering_speed) + 10, right_speed=int(high_maneuvering_speed))
+motors.move_tank(7, 'cm', left_speed=0, right_speed=25)
+motors.move_tank(-3, 'cm', left_speed=20, right_speed=20)
+arm.down()
+arm_motor.run_for_degrees(-15)
+
+motors.move_tank(-4, 'cm', left_speed=20, right_speed=20)
+arm.up()
+motors.move_tank(0.)
+
+motors.move_tank(4, 'cm', left_speed=20, right_speed=20) #adjusting position start
+motors.move_tank(0.2, 'rotations', left_speed=20, right_speed=0)
+motors.move_tank(-3, 'cm', left_speed=20, right_speed=20)
+motors.move_tank(0.2, 'rotations', left_speed=20, right_speed=0)
+
+motors.move_tank(-65, 'cm', left_speed=50, right_speed=50)
+
+arm.down()
