@@ -398,6 +398,7 @@ abstand_zu_wand=5 #<- geschätzt, ggf anpassen (in cm)
 rotate.right(3)
 rotate.drive_straight(time_drive_straight, speed=int(maneuvering_speed))
 guidance.drive()
+guidance.run()
 
 while True:
     if distance.get_distance_cm() < abstand_zu_wand:
