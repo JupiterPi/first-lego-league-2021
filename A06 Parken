@@ -391,11 +391,12 @@ guidance.drive_and_take_crossing(2)
 guidance.drive_for(0.2)
 #guidance.switch_to_lane('B')
 guidance.drive_to_white()
+guidance.manually_switch_to_lane('B')
 guidance.run()
 
-time_drive_straight=1  #<- geschätzt, ggf anpassen
-abstand_zu_wand=5 #<- geschätzt, ggf anpassen (in cm)
-rotate.right(3)
+time_drive_straight=0.5  #<- geschätzt, ggf anpassen
+abstand_zu_wand=4 #<- geschätzt, ggf anpassen (in cm)
+#rotate.right(3)
 rotate.drive_straight(time_drive_straight, speed=int(maneuvering_speed))
 guidance.drive()
 guidance.run()
