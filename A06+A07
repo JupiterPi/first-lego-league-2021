@@ -289,7 +289,7 @@ class ArmControl:
         arm_motor.run_to_position(0)
         print("calibrating arm...")
         wait_for_seconds(1)
-        
+
 
 # -- RotationalGuidance --
 
@@ -394,7 +394,9 @@ guidance.drive_to_white()
 #guidance.manually_switch_to_lane('B')
 guidance.run()
 
-time_drive_straight=0.5  #<- geschätzt, ggf anpassen
+#A07:
+
+time_drive_straight=0.5 #<- geschätzt, ggf anpassen (in sek)
 rotate.drive_straight(time_drive_straight, speed=int(maneuvering_speed))
 #rotate.right(90)
 guidance.drive()
@@ -403,14 +405,19 @@ guidance.run()
 abstand_zu_wand=12 #<- geschätzt, ggf anpassen (in cm)
 
 while True:
+    print("Distanz zu Wand: " + distance.get_distance_cm() + "cm")
     if distance.get_distance_cm() < abstand_zu_wand:
         motors.stop()
         break
-        
+
 rotate.right(90)
 motors.start(steering=0, speed=int(high_maneuvering_speed))
 wait_until(light_a.get_color() != 'black' and light_b.get_color() != 'black' and light_a.get_reflected_light() <= min_light + 4 and light_b.get_reflected_light <= min_light + 4)
 motors.stop()
+
+wait_for_seconds(0.5)
+
+#A06:
 
 motors.start(steering=0, speed=int(-high_maneuvering_speed))
 wait_until(light_a.get_color() != 'black' and light_b.get_color() != 'black' and light_a.get_reflected_light() <= min_light + 4 and light_b.get_reflected_light <= min_light + 4)
@@ -426,6 +433,7 @@ guidance.drive()
 guidance.run()
 
 while True:
+    print("Distanz zu Wand: " + distance.get_distance_cm() + "cm")
     if distance.get_distance_cm() <= abstand_zu_wand:
         motors.stop()
         break
