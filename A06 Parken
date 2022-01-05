@@ -388,26 +388,50 @@ motors.move(10)
 
 guidance.manually_switch_to_lane('B')
 guidance.drive_and_take_crossing(2)
-guidance.drive_for(0.2)
+#guidance.drive_for(0.2)
 #guidance.switch_to_lane('B')
 guidance.drive_to_white()
-guidance.manually_switch_to_lane('B')
+#guidance.manually_switch_to_lane('B')
 guidance.run()
 
 time_drive_straight=0.5  #<- geschätzt, ggf anpassen
-abstand_zu_wand=4 #<- geschätzt, ggf anpassen (in cm)
-#rotate.right(3)
 rotate.drive_straight(time_drive_straight, speed=int(maneuvering_speed))
+#rotate.right(90)
 guidance.drive()
 guidance.run()
+
+abstand_zu_wand=12 #<- geschätzt, ggf anpassen (in cm)
 
 while True:
     if distance.get_distance_cm() < abstand_zu_wand:
         motors.stop()
         break
+        
+rotate.right(90)
+motors.start(steering=0, speed=int(high_maneuvering_speed))
+wait_until(light_a.get_color() != 'black' and light_b.get_color() != 'black' and light_a.get_reflected_light() <= min_light + 4 and light_b.get_reflected_light <= min_light + 4)
+motors.stop()
+
+motors.start(steering=0, speed=int(-high_maneuvering_speed))
+wait_until(light_a.get_color() != 'black' and light_b.get_color() != 'black' and light_a.get_reflected_light() <= min_light + 4 and light_b.get_reflected_light <= min_light + 4)
+motors.stop()
+
+motors.move_tank(0.1, 'rotations', left_speed=int(high_maneuvering_speed), right_speed=int(high_maneuvering_speed))
+rotate.left(90)
+
+abstand_zu_wand=5 #geschätzt, ggf anpassen (in cm)
+
+guidance.manually_switch_to_lane('B')
+guidance.drive()
+guidance.run()
+
+while True:
+    if distance.get_distance_cm() <= abstand_zu_wand:
+        motors.stop()
+        break
 
 rotate.left(90)
 
-motors.start(steering=0, speed=high_maneuvering_speed)
+motors.start(steering=0, speed=int(high_maneuvering_speed))
 wait_until(light_a.get_color() != 'black' and light_b.get_color() != 'black' and light_a.get_reflected_light() > min_light and light_b.get_reflected_light > min_light)
 motors.stop()
