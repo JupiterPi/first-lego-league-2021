@@ -1,0 +1,12 @@
+#$start$
+
+motors.move_tank(-35, 'cm', left_speed=40, right_speed=40)
+arm.up
+arm_motor.run_for_degrees(70)
+motors.move_tank(0.5, 'rotations', left_speed=-30, right_speed=30)
+motors.move_tank(33, 'cm', left_speed=30, right_speed=30)
+motors.move_tank(-3, 'cm', left_speed=20, right_speed=20)
+motors.move_tank(0.5, 'rotations', left_speed=-30, right_speed=30)
+motors.move_tank(21, 'cm', left_speed=20, right_speed=20)
+arm_motor.run_for_degrees(-70)
+arm_motor.run_for_degrees(90)

@@ -1,0 +1,65 @@
+#$start$
+status.pre()
+
+#> drive forward another bit and turn to bridge
+motors.move(5)
+rotate.left(90)
+
+#> maneuvre to bridge handle
+motors.move_tank(1, "seconds", -20, -20)
+motors.move_tank(1, "seconds", 20, 10)
+motors.move_tank(1, "seconds", 10, 20)
+
+status.full()
+status.pre()
+
+#> drive forward, lower arm to grab bridge handle, drive back out to operate bridge, pull arm back out
+motors.move(6)
+arm.mid()
+motors.move(-10)
+arm.up()
+
+status.full()
+status.pre()
+
+#> drive forward to align with route
+guidance.manually_switch_to_lane("B")
+guidance.drive_to_crossing(1)
+guidance.run()
+
+#> rotate to face forward, correct orientation
+rotate.left(90)
+motors.move_tank(1, "seconds", 15, 0)
+
+status.full()
+status.pre()
+
+#> drive back to start of train
+guidance.drive_to_crossing(1)
+guidance.run()
+
+#> align with direction of train, get arm away
+rotate.left(180)
+arm.up()
+
+#> drive forward, read target orientation, drive back
+guidance.manually_switch_to_lane("A")
+og_speed = speed
+speed = og_speed * 0.6
+guidance.drive_for(2)
+guidance.run()
+speed = og_speed
+hub.motion_sensor.reset_yaw_angle()
+motors.move(-23)
+
+status.full()
+status.pre()
+
+#> lower arm and push train
+arm.down()
+rotate.drive_straight(10, speed=40, reset_yaw_angle=False, crossing_sensor="B")
+
+#> put arm away again
+arm.up()
+
+status.full()
