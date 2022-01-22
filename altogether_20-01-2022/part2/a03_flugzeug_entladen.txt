@@ -1,0 +1,37 @@
+#$start$
+
+hub.left_button.wait_until_pressed()
+hub.speaker.beep(80, 0.7)
+
+arm_motor.run_to_position(110)
+
+motors.move_tank(20, 'cm', left_speed=int(speed), right_speed=int(speed))
+
+guidance.drive_to_crossing(1) #drive to the first crossing
+guidance.run()
+
+motors.move_tank(10, 'cm', left_speed=(int(high_maneuvering_speed) + 15), right_speed=int(high_maneuvering_speed)) #adjusting position
+arm_motor.run_to_position(160)
+motors.move_tank(30, 'cm', left_speed=-40, right_speed=-40) #driving to right position
+motors.move_tank(0.05, 'rotations', left_speed=-20, right_speed=20) #adjusting position
+motors.move_tank(-3, 'cm', left_speed=(int(high_maneuvering_speed) + 15), right_speed=int(high_maneuvering_speed)) #adjusting position
+motors.move_tank(-2, 'cm', left_speed=(int(high_maneuvering_speed)), right_speed=int(high_maneuvering_speed))
+arm.mid() #putting arm to mid position
+motors.move_tank(-2, 'cm', left_speed=int(high_maneuvering_speed), right_speed=int(high_maneuvering_speed))
+arm_motor.run_for_degrees(-35)
+arm_motor.run_for_degrees(80)
+motors.move_tank(-4, 'cm', left_speed=int(maneuvering_speed), right_speed=int(maneuvering_speed))
+motors.move_tank(0.08, 'rotations', left_speed=25, right_speed=0)
+#motors.move_tank(5, 'cm', left_speed=-50, right_speed=0)
+#motors.move_tank(6, 'cm', left_speed=-20, right_speed=-40)
+#motors.move_tank(0.12, 'rotations', left_speed=20, right_speed=-20)
+motors.move_tank(14, 'cm', left_speed=int(maneuvering_speed), right_speed=int(maneuvering_speed))
+motors.move_tank(0.05, 'rotations', left_speed=0, right_speed=25)
+arm_motor.run_for_degrees(-100)
+motors.move_tank(0.1, 'rotations', left_speed=-20, right_speed=20)
+motors.move_tank(-2, 'cm', left_speed=20, right_speed=20)
+motors.move_tank(0.2, 'rotations', left_speed=-20, right_speed=20)
+motors.move_tank(-9, 'cm', left_speed=20, right_speed=15)
+motors.move_tank(0.07, 'rotations', left_speed=20, right_speed=-20)
+arm_motor.run_to_position(110)
+motors.move_tank(-50, 'cm', left_speed=100, right_speed=100)

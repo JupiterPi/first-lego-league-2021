@@ -1,0 +1,5 @@
+#$start$
+
+rotate.drive_straight(2, speed=30, backwards=True)
+rotate.right(90)
+rotate.drive_straight(6, speed=100, backwards=False)

@@ -1,0 +1,15 @@
+#$start$
+
+guidance.drive_to_crossing(2)
+guidance.run()
+
+motors.move_tank(1, "seconds", left_speed=50, right_speed=50)
+motors.move_tank(1, "seconds", left_speed=-30, right_speed=-30)
+motors.move_tank(1, "seconds", left_speed=55, right_speed=0)
+motors.move_tank(1, "seconds", left_speed=10, right_speed=10)
+
+guidance.manually_switch_to_lane("A")
+guidance.run()
+
+guidance.drive_to_white()
+guidance.run()
