@@ -1,4 +1,4 @@
-#§frame§
+#$frame$
 from spike import PrimeHub, LightMatrix, Button, StatusLight, ForceSensor, MotionSensor, Speaker, ColorSensor, App, DistanceSensor, Motor, MotorPair
 from spike.control import wait_for_seconds, wait_until, Timer
 from math import *
@@ -586,3 +586,4 @@ if activate_guidance:
 #hub.speaker.beep(80, 0.7)
 
 #motors.move(15)
+#$start$
