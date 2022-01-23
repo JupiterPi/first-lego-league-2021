@@ -46,6 +46,12 @@ class LineGuidance:
     white_measurements = []
     black_measurements = []
 
+    def calibrate(self, max_light, min_light):
+        self.max_light = max_light
+        self.min_light = min_light
+        hub.speaker.beep(65, 0.5)
+        hub.speaker.beep(70, 0.5)
+
     def initialize_and_start(self, checkLanes = False):
         # calibrate lights
 
@@ -462,8 +468,11 @@ class StatusDisplay:
                 self.active = False
                 print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! DISPLAY LIMIT REACHED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
+
+#-----LaneCheck-----
 class LaneCheck:
     def check(self, lanes = "both", tolerance = 2, sendChatFeedback = false):
+        log = "log"
         black = guidance.min_light
         white = guidance.max_light
         self.left_value = light_a.get_reflected_light()
@@ -474,92 +483,107 @@ class LaneCheck:
         #self.min_right = self.right_value - tolerance
         if lanes == "both":
             hub.right_button.wait_until_pressed()
-                while True:
-                    if abs(self.left_value - black) >= tolerance and abs(self.right_value - black) >= tolerance:
-                        hub.status_light.on("green")
-                        self.log = "values match measurements"
-                    else:
-                        hub.status_light.on("red")
-                        self.log = "values don't match measurements"
-                    if hub.right_button.is_pressed():
-                        break
-                    if hub.left_button.is_pressed():
-                        return
-                    if sendChatFeedback:
-                        print(self.log)
-                while True:
-                    if abs(self.left_value - white) >= tolerance and abs(self.right_value - white) >= tolerance:
-                        hub.status_light.on("green")
-                        self.log = "values match measurements"
-                    else:
-                        hub.status_light.on("red")
-                        self.log = "values don't match measurements"
-                    if hub.right_button.is_pressed():
-                        break
-                    if hub.left_button.is_pressed():
-                        return
-                    if sendChatFeedback:
-                        print(self.log)
+            while True:
+                if abs(self.left_value - black) >= tolerance and abs(self.right_value - black) >= tolerance:
+                    hub.status_light.on("green")
+                    self.log = "values match measurements"
+                else:
+                    hub.status_light.on("red")
+                    self.log = "values don't match measurements"
+                if hub.left_button.is_pressed():
+                    return
+                if sendChatFeedback:
+                    print(self.log)
+                if hub.right_button.is_pressed():
+                    break
+                    while True:
+                        if abs(self.left_value - white) >= tolerance and abs(self.right_value - white) >= tolerance:
+                            hub.status_light.on("green")
+                            self.log = "values match measurements"
+                        else:
+                            hub.status_light.on("red")
+                            self.log = "values don't match measurements"
+                        if hub.right_button.is_pressed():
+                            break
+                        if hub.left_button.is_pressed():
+                            return
+                        if sendChatFeedback:
+                            print(self.log)
 
         if lanes == "A":
             hub.right_button.wait_until_pressed()
-                while True:
-                    if abs(self.left_value - black) >= tolerance:
-                        hub.status_light.on("green")
-                        self.log = "value match measurements"
-                    else:
-                        hub.status_light.on("red")
-                        self.log = "value doesn't match measurement"
-                    if hub.right_button.is_pressed():
-                        break
-                    if hub.left_button.is_pressed():
-                        return
-                    if sendChatFeedback:
-                        print(self.log)
-                while True:
-                    if abs(self.left_value - white) >= tolerance:
-                        hub.status_light.on("green")
-                        self.log = "value matches measurement"
-                    else:
-                        hub.status_light.on("red")
-                        self.log = "value doesn't match measurement"
-                    if hub.right_button.is_pressed():
-                        break
-                    if hub.left_button.is_pressed():
-                        return
-                    if sendChatFeedback:
-                        print(self.log)
+            while True:
+                if abs(self.left_value - black) >= tolerance:
+                    hub.status_light.on("green")
+                    self.log = "value matches measurement"
+                else:
+                    hub.status_light.on("red")
+                    self.log = "value doesn't match measurement"
+                if hub.left_button.is_pressed():
+                    return
+                if sendChatFeedback:
+                    print(self.log)
+                if hub.right_button.is_pressed():
+                    break
+                    while True:
+                        if abs(self.left_value - white) >= tolerance:
+                            hub.status_light.on("green")
+                            self.log = "value matches measurement"
+                        else:
+                            hub.status_light.on("red")
+                            self.log = "value doesn't match measurement"
+                        if hub.right_button.is_pressed():
+                            return
+                        if hub.left_button.is_pressed():
+                            return
+                        if sendChatFeedback:
+                            print(self.log)
 
         if lanes == "B":
             hub.right_button.wait_until_pressed()
-                while True:
-                    if abs(self.right_value - black) >= tolerance:
-                        hub.status_light.on("green")
-                        self.log = "value match measurements"
-                    else:
-                        hub.status_light.on("red")
-                        self.log = "value doesn't match measurement"
-                    if hub.right_button.is_pressed():
-                        break
-                    if hub.left_button.is_pressed():
-                        return
-                    if sendChatFeedback:
-                        print(self.log)
-                while True:
-                    if abs(self.right_value - white) >= tolerance:
-                        hub.status_light.on("green")
-                        self.log = "value matches measurement"
-                    else:
-                        hub.status_light.on("red")
-                        self.log = "value doesn't match measurement"
-                    if hub.right_button.is_pressed():
-                        break
-                    if hub.left_button.is_pressed():
-                        return
-                    if sendChatFeedback:
-                        print(self.log)
-                    
-                
+            while True:
+                if abs(self.right_value - black) >= tolerance:
+                    hub.status_light.on("green")
+                    self.log = "value matches measurement"
+                else:
+                    hub.status_light.on("red")
+                    self.log = "value doesn't match measurement"
+                if hub.left_button.is_pressed():
+                    return
+                if sendChatFeedback:
+                    print(self.log)
+                if hub.right_button.is_pressed():
+                    while True:
+                        if abs(self.right_value - white) >= tolerance:
+                            hub.status_light.on("green")
+                            self.log = "value matches measurement"
+                        else:
+                            hub.status_light.on("red")
+                            self.log = "value doesn't match measurement"
+                        if hub.right_button.is_pressed():
+                            return
+                        if hub.left_button.is_pressed():
+                            return
+                        if sendChatFeedback:
+                            print(self.log)
+    def displayColor(self, lane, sendChatFeedback = False):
+        hub.right_button.wait_until_pressed()
+        if lane == "A":                   
+            while True:
+                hub.status_light.on(light_a.get_color())
+                self.log = light_a.get_color()
+                if hub.right_button.is_pressed():
+                    return     
+                if sendChatFeedback:
+                    print(self.log)
+        if lane == "B":                   
+            while True:
+                hub.status_light.on(light_b.get_color())
+                self.log = light_b.get_color()
+                if hub.right_button.is_pressed():
+                    return     
+                if sendChatFeedback:
+                    print(self.log)
 
 lanes = LaneCheck()
 status = StatusDisplay()
