@@ -1,0 +1,25 @@
+#$start$
+
+arm.mid()
+
+#> drive to first crossing (puts down the first part of the bridge)
+guidance.drive_to_crossing(2)
+guidance.run()
+
+arm.up()
+
+#> drive to next crossing
+motors.move_tank(1, "seconds", left_speed=30, right_speed=30)
+guidance.drive_to_crossing(1)
+guidance.run()
+
+arm.mid()
+
+#> drive backwards and then forwards again to put down the second part of the bridge
+brucke_speed = 30
+motors.move_tank(1, "seconds", left_speed=-brucke_speed , right_speed=-brucke_speed)
+#motors.move_tank(1, "seconds", left_speed=brucke_speed , right_speed=brucke_speed)
+
+arm.up()
+
+print("bruecke done")

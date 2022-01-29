@@ -1,0 +1,18 @@
+#$start$
+
+#> drive to crossing ...
+guidance.manually_switch_to_lane('B')
+guidance.drive_to_crossing(2)
+guidance.run()
+
+#> ... and take turn
+motors.move_tank(0.5, 'rotations', left_speed=0, right_speed=30)
+motors.move_tank(2, 'cm', left_speed=20, right_speed=20)
+motors.move_tank(26, 'cm', left_speed=45, right_speed=21)
+
+#> drive back and against wall
+motors.move_tank(-4, 'cm', left_speed=20, right_speed=20)
+#arm_motor.run_for_degrees(-40)
+arm.mid()
+#motors.move_tank(9, 'cm', left_speed=30, right_speed=30)
+rotate.drive_straight(2)

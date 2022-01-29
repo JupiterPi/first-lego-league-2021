@@ -1,0 +1,16 @@
+#$start$
+
+#> turn left, drive to Einparken and put down arm
+
+motors.move_tank(-35, 'cm', left_speed=40, right_speed=40)
+#arm.up #...................................................... syntax error???
+arm_motor.run_for_degrees(70)
+motors.move_tank(0.5, 'rotations', left_speed=-30, right_speed=30)
+motors.move_tank(40, 'cm', left_speed=50, right_speed=50)
+motors.move_tank(-3, 'cm', left_speed=20, right_speed=20)
+motors.move_tank(0.5, 'rotations', left_speed=-30, right_speed=30)
+#motors.move_tank(21, 'cm', left_speed=20, right_speed=20)
+rotate.drive_straight(10, speed=40, reset_yaw_angle=True, crossing_sensor="B")
+motors.move_tank(4, 'cm', left_speed=20, right_speed=20)
+arm_motor.run_for_degrees(-70)
+arm_motor.run_for_degrees(90)
