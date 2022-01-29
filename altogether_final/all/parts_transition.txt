@@ -1,0 +1,6 @@
+#$start$
+
+hub.right_button.wait_until_pressed()
+hub.speaker.beep(80, 0.7)
+
+motors.move(15)
